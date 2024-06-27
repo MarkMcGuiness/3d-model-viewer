@@ -18,23 +18,20 @@ app.get('/', (req, res) => {
 app.post('/upload', (req, res) => {
     // Handle file upload logic here
     // This is where you process the uploaded file and generate a unique link
-    const uploadedFile = req.files.file; // Assuming you're using multer for file uploads
-
     // Example: Generate a unique ID for the link
     const uniqueId = uuidv4();
-    const link = `https://boiling-depths-97500.herokuapp.com/view/${uniqueId}`;
-
+    const link = `https://boiling-depths-97500-929bb23a743e.herokuapp.com/view/${uniqueId}`;
+    
     // Example: Save data to a JSON file
     const data = {
         link,
-        uploadedFileName: uploadedFile.name,
-        uploadedFileUrl: link // Replace with actual file URL or path
+        uploadedFileName: req.body.fileName,
+        uploadedFileUrl: req.body.fileUrl // Replace with actual file URL or path
     };
     const jsonData = JSON.stringify(data, null, 2);
     fs.writeFileSync('data.json', jsonData);
 
-    // You can respond with JSON or HTML as per your application's needs
-    res.json({ link }); // Send back the link as JSON response
+    res.send(`Uploaded successfully! View your 3D model <a href="${link}">here</a>.`);
 });
 
 // Dynamic port binding for Heroku
