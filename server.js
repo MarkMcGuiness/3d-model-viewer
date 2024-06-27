@@ -1,34 +1,41 @@
 const express = require('express');
-const multer  = require('multer');
-const { v4: uuidv4 } = require('uuid'); // Import uuid v4 from the uuid package
+const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const port = process.env.PORT || 3000; // Use the port provided by Heroku or default to 3000
 
-// Multer configuration for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, uuidv4() + '-' + file.originalname);
-  }
-});
+// Middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const upload = multer({ storage: storage });
-
-// Example endpoint for file upload
-app.post('/upload', upload.single('file'), (req, res) => {
-  // Handle file upload logic here
-  res.send('File uploaded successfully.');
-});
-
-// Example endpoint for root route
+// Routes
 app.get('/', (req, res) => {
-  res.send('Welcome to the 3D Model Viewer API!');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.post('/upload', (req, res) => {
+    // Handle file upload logic here
+    // This is where you process the uploaded file and generate a unique link
+    // Example: Generate a unique ID for the link
+    const uniqueId = uuidv4();
+    const link = `https://your-domain.com/view/${uniqueId}`;
+    
+    // Example: Save data to a JSON file
+    const data = {
+        link,
+        uploadedFileName: req.body.fileName,
+        uploadedFileUrl: req.body.fileUrl // Replace with actual file URL or path
+    };
+    const jsonData = JSON.stringify(data, null, 2);
+    fs.writeFileSync('data.json', jsonData);
+
+    res.send(`Uploaded successfully! View your 3D model <a href="${link}">here</a>.`);
+});
+
+// Dynamic port binding for Heroku
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
