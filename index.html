@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 300px;
+            height: 200px;
+            text-align: center;
+            padding: 20px;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop-area">
+        <h3>Drag & Drop .glb file here</h3>
+        <input type="file" id="fileElem" accept=".glb" style="display:none">
+        <label class="button" for="fileElem">Select a file</label>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
