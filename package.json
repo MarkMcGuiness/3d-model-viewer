@@ -12,9 +12,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "multer": "^1.4.4",
-    "three": "^0.128.0"
+    "three": "^0.128.0",
+    "uuid": "^8.3.2"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MarkMcGuiness/3d-model-viewer.git"
