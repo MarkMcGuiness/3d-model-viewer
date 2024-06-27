@@ -20,7 +20,7 @@ app.post('/upload', (req, res) => {
     // This is where you process the uploaded file and generate a unique link
     // Example: Generate a unique ID for the link
     const uniqueId = uuidv4();
-    const link = `https://your-domain.com/view/${uniqueId}`;
+    const link = `https://boiling-depths-97500.herokuapp.com/view/${uniqueId}`;
     
     // Example: Save data to a JSON file
     const data = {

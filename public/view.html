@@ -5,37 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Model Viewer</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+        body { margin: 0; } /* Remove default margin */
+        canvas { display: block; } /* Make the canvas fill the screen */
     </style>
 </head>
 <body>
+    <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include GLTFLoader and OrbitControls modules -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script>
         console.log('3D Model Viewer script loaded');
 
+        // Extract fileId parameter from URL query string
         const params = new URLSearchParams(window.location.search);
         const fileId = params.get('fileId');
-        const modelUrl = `/uploads/${fileId}`;
+        const modelUrl = `/uploads/${fileId}`; // Assuming your server serves models from /uploads directory
 
         console.log('Model URL:', modelUrl);
 
+        // Setup Three.js scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0xffffff); // Set background to white
+        renderer.setClearColor(0xffffff); // Set background color to white
         document.body.appendChild(renderer.domElement);
 
-        console.log('Three.js setup complete');
-
-        // Add ambient light
+        // Add ambient light to the scene
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         scene.add(ambientLight);
 
-        // Add directional lights
+        // Add directional lights for better visibility of the model
         const frontLight = new THREE.DirectionalLight(0xffffff, 1);
         frontLight.position.set(5, 5, 5).normalize();
         scene.add(frontLight);
@@ -52,27 +54,31 @@
         rightLight.position.set(5, 5, -5).normalize();
         scene.add(rightLight);
 
+        // Load the 3D model using GLTFLoader
         const loader = new THREE.GLTFLoader();
         loader.load(modelUrl, function(gltf) {
             console.log('Model loaded successfully', gltf);
-            scene.add(gltf.scene);
-            animate();
+            scene.add(gltf.scene); // Add the loaded model to the scene
+            animate(); // Start animation/render loop
         }, undefined, function(error) {
             console.error('Error loading model:', error);
         });
 
+        // Set camera position
         camera.position.z = 5;
 
+        // Setup OrbitControls to allow user interaction
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.update();
 
+        // Animation/render loop
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
+            controls.update(); // Update controls
+            renderer.render(scene, camera); // Render the scene
         }
 
-        console.log('Animate function set up');
+        console.log('Initialization complete');
     </script>
 </body>
 </html>
