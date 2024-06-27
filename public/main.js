@@ -1,6 +1,7 @@
 const dropArea = document.getElementById('drop-area');
 const fileElem = document.getElementById('fileElem');
 
+// Prevent default behaviors for drag and drop events
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     dropArea.addEventListener(eventName, preventDefaults, false);
 });
@@ -10,6 +11,7 @@ function preventDefaults(e) {
     e.stopPropagation();
 }
 
+// Handle drop event
 dropArea.addEventListener('drop', handleDrop, false);
 
 function handleDrop(e) {
@@ -19,15 +21,18 @@ function handleDrop(e) {
     handleFiles(files);
 }
 
+// Handle file selection via file input element
 fileElem.addEventListener('change', (e) => {
     console.log('Files selected:', fileElem.files);
     handleFiles(fileElem.files);
 });
 
+// Process each file dropped or selected
 function handleFiles(files) {
     [...files].forEach(uploadFile);
 }
 
+// Upload file function using fetch API
 function uploadFile(file) {
     console.log('Uploading file:', file);
     let url = '/upload';
@@ -39,6 +44,9 @@ function uploadFile(file) {
         body: formData
     })
     .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         console.log('Response received:', response);
         return response.json();
     })
